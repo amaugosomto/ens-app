@@ -68,6 +68,7 @@ const NameRegister = ({
       {step === 'PRICE_DECISION' && (
         <Pricer
           name={domain.label}
+          tld={domain.parent.split('.').slice(-1)[0]}
           duration={duration}
           years={years}
           setYears={setYears}
@@ -87,6 +88,7 @@ const NameRegister = ({
         incrementStep={incrementStep}
         decrementStep={decrementStep}
         step={step}
+        parent={domain.parent}
         label={domain.label}
         duration={duration}
         secondsPassed={secondsPassed}
@@ -102,7 +104,13 @@ const NameRegister = ({
 
 const NameRegisterDataWrapper = props => {
   return (
-    <Query query={GET_MINIMUM_COMMITMENT_AGE}>
+    <Query
+      query={GET_MINIMUM_COMMITMENT_AGE}
+      variables={{
+        tld:
+          props.domain.parent.split('.').slice(-1)[0] === 'ewc' ? 'ewc' : 'eth'
+      }}
+    >
       {({ data, loading, error }) => {
         if (loading) return <Loader withWrap={true} large />
         if (error) {

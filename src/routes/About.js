@@ -201,7 +201,7 @@ function About() {
             <Map />
           </AboutENSImgContainer>
           <AboutENSText>
-            Map simple names like ‘alice.eth’ to Ethereum addresses, content
+            Map simple names like ‘alice.ewc’ to Ethereum addresses, content
             hashes, and metadata.
           </AboutENSText>
         </Card>

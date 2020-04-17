@@ -17,7 +17,7 @@ export default function NotAvailable({ domain }) {
   return (
     <NotAvailableContainer>
       <Message>
-        Registration of new .eth names is disabled while the ENS migration is
+        Registration of new .ewc names is disabled while the ENS migration is
         underway. Please check back on February 10th.
       </Message>
     </NotAvailableContainer>

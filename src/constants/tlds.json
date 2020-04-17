@@ -2,8 +2,14 @@
   "eth": {
     "supported": true
   },
-  "xyz": {
+  "ewc": {
     "supported": true
+  },
+  "ewf": {
+    "supported": true
+  },
+  "xyz": {
+    "supported": false
   },
   "test": {
     "supported": true
@@ -12,9 +18,9 @@
     "supported": true
   },
   "luxe": {
-    "supported": true
+    "supported": false
   },
   "art": {
-    "supported": true
+    "supported": false
   }
 }

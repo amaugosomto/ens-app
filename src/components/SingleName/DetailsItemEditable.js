@@ -109,7 +109,7 @@ function getMessages({ keyName, parent, deedOwner, isDeedOwner }) {
   let [newValue, newType] = getDefaultMessage(keyName)
   if (
     keyName === 'Owner' &&
-    parent === 'eth' &&
+    (parent === 'eth' || parent === 'ewc') &&
     parseInt(deedOwner, 16) !== 0
   ) {
     newValue = 'Pending'
@@ -222,11 +222,23 @@ function getValidation(keyName, newValue) {
   }
 }
 
-function getVariables(keyName, { domain, variableName, newValue, duration }) {
+function getVariables(
+  keyName,
+  { domain, variableName, newValue, duration, mutationName }
+) {
   if (keyName === 'Expiration Date') {
     return {
       label: domain.name.split('.')[0],
       duration
+    }
+  } else if (
+    keyName === 'Registrant' ||
+    (keyName === 'Controller' && mutationName === 'reclaim')
+  ) {
+    return {
+      name: domain.name,
+      [variableName ? variableName : 'address']: newValue,
+      tld: domain.parent.split('.').slice(-1)[0]
     }
   } else {
     return {
@@ -249,6 +261,8 @@ const Editable = ({
   refetch,
   confirm
 }) => {
+  //console.log("yolo mutation name", mutation['definitions'][0]['name']['value'])
+  const mutationName = mutation['definitions'][0]['name']['value']
   const { state, actions } = useEditable()
   const [presetValue, setPresetValue] = useState('')
 
@@ -276,7 +290,21 @@ const Editable = ({
 
   const isValid = getValidation(keyName, newValue)
   const isInvalid = !isValid && newValue.length > 0
-
+  //console.log("yolo Editable", keyName)
+  /*console.log({
+    keyName,
+    value,
+    type,
+    notes,
+    mutation,
+    mutationButton,
+    editButton,
+    domain,
+    variableName,
+    refetch,
+    confirm
+  })
+  */
   return (
     <Mutation
       mutation={mutation}
@@ -381,7 +409,12 @@ const Editable = ({
                   </EditRecord>
                   <Buttons>
                     {keyName === 'Resolver' && (
-                      <Query query={GET_PUBLIC_RESOLVER}>
+                      <Query
+                        query={GET_PUBLIC_RESOLVER}
+                        variables={{
+                          tld: domain.parent.split('.').slice(-1)[0]
+                        }}
+                      >
                         {({ data, loading }) => {
                           if (loading) return null
                           return (
@@ -401,11 +434,13 @@ const Editable = ({
                     <SaveCancel
                       stopEditing={stopEditing}
                       mutation={() => {
+                        //console.log("yolo mutating", keyName)
                         const variables = getVariables(keyName, {
                           domain,
                           variableName,
                           newValue,
-                          duration
+                          duration,
+                          mutationName
                         })
                         mutation({ variables })
                       }}

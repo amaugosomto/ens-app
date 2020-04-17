@@ -30,6 +30,7 @@ window.addEventListener('load', async () => {
       })
     }
     const networkId = await getNetworkId()
+    //console.log("yolo", networkId)
     client = await setupClient(networkId)
   } catch (e) {
     console.log(e)

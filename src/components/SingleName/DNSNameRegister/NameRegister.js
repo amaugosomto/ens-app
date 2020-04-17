@@ -252,6 +252,7 @@ const NameRegister = ({ account, domain, refetch, readOnly }) => {
       ) : null}
       <CTA
         name={domain.name}
+        parent={domain.parent}
         parentOwner={domain.parentOwner}
         incrementStep={incrementStep}
         step={step}

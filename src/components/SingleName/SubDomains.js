@@ -105,7 +105,7 @@ function SubDomains({
     !loadingIsMigrated &&
     isParentMigratedToNewRegistry &&
     isMigratedToNewRegistry
-
+  //console.log("yolo SubDomains", domain)
   return (
     <SubDomainsContainer {...rest}>
       {parseInt(domain.owner, 16) !== 0 ? (

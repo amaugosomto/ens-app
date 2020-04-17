@@ -119,7 +119,11 @@ function displayMigrationDiralogue({
   isNewRegistrar,
   confirmed
 }) {
-  return (parent === 'eth' && (isDeedOwner && !isNewRegistrar)) || confirmed
+  return (
+    ((parent === 'eth' || parent === 'ewc') &&
+      (isDeedOwner && !isNewRegistrar)) ||
+    confirmed
+  )
 }
 
 function TransferRegistrars({

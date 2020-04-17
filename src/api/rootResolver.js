@@ -49,6 +49,10 @@ const resolvers = {
           return 'goerli'
         case 42:
           return 'kovan'
+        case 73799:
+          return 'volta'
+        case 246:
+          return 'EWC'
         default:
           return 'private'
       }
@@ -67,9 +71,10 @@ const resolvers = {
         return null
       }
     },
-    publicResolver: async () => {
+    publicResolver: async (_, { tld }) => {
+      //console.log("yolo publicResolver", tld)
       try {
-        const resolver = await getAddress('resolver.eth')
+        const resolver = await getAddress('resolver.' + tld)
         return {
           address: resolver,
           __typename: 'Resolver'

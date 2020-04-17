@@ -27,12 +27,14 @@ function randomSecret() {
 
 const resolvers = {
   Query: {
-    async getRentPrice(_, { name, duration }, { cache }) {
-      return await getRentPrice(name, duration)
+    async getRentPrice(_, { name, duration, tld }, { cache }) {
+      //console.log("yolo getRentPrice", name, duration, tld)
+      return await getRentPrice(name, duration, tld)
     },
-    async getMinimumCommitmentAge() {
+    async getMinimumCommitmentAge(_, { tld }) {
+      //console.log("yolo getMinimumCommitmentAge", tld)
       try {
-        const minCommitmentAge = await getMinimumCommitmentAge()
+        const minCommitmentAge = await getMinimumCommitmentAge(tld)
         return parseInt(minCommitmentAge)
       } catch (e) {
         console.log(e)
@@ -40,28 +42,33 @@ const resolvers = {
     }
   },
   Mutation: {
-    async commit(_, { label }, { cache }) {
+    async commit(_, { label, tld }, { cache }) {
       //Generate secret
+      //console.log("yolo commit", label, tld)
       const secret = randomSecret()
       secrets[label] = secret
-      const tx = await commit(label, secret)
+      const tx = await commit(label, secret, tld)
       return sendHelper(tx)
     },
-    async register(_, { label, duration }) {
+    async register(_, { label, duration, tld }) {
+      //console.log("yolo register", { label, duration, tld })
       const secret = secrets[label]
-      const tx = await register(label, duration, secret)
+      const tx = await register(label, duration, secret, tld)
 
       return sendHelper(tx)
     },
-    async reclaim(_, { name, address }) {
-      const tx = await reclaim(name, address)
+    async reclaim(_, { name, address, tld }) {
+      //console.log("yolo reclaim", name, address, tld)
+      const tx = await reclaim(name, address, tld)
       return sendHelper(tx)
     },
-    async renew(_, { label, duration }) {
-      const tx = await renew(label, duration)
+    async renew(_, { label, duration, tld }) {
+      //console.log("yolo renew", label, duration, tld)
+      const tx = await renew(label, duration, tld)
       return sendHelper(tx)
     },
-    async getDomainAvailability(_, { name }, { cache }) {
+    async getDomainAvailability(_, { name, tld }, { cache }) {
+      //console.log("yolo getDomainAvailability", name, tld)
       try {
         const {
           state,
@@ -69,7 +76,7 @@ const resolvers = {
           revealDate,
           value,
           highestBid
-        } = await getEntry(name)
+        } = await getEntry(name, tld)
         let owner = null
         if (isShortName(name)) {
           cache.writeData({
@@ -79,12 +86,14 @@ const resolvers = {
         }
 
         if (modeNames[state] === 'Owned') {
-          owner = await getOwner(`${name}.eth`)
+          //owner = await getOwner(`${name}.eth`)
+          owner = await getOwner(`${name}.${tld}`)
         }
 
         const data = {
           domainState: {
-            name: `${name}.eth`,
+            //name: `${name}.eth`,
+            name: `${name}.${tld}`,
             state: modeNames[state],
             registrationDate,
             revealDate,
@@ -102,12 +111,14 @@ const resolvers = {
         console.log('Error in getDomainAvailability', e)
       }
     },
-    async setRegistrant(_, { name, address }) {
-      const tx = await transferOwner(name, address)
+    async setRegistrant(_, { name, address, tld }) {
+      //console.log("yolo setregistrant", name, address, tld)
+      const tx = await transferOwner(name, address, tld)
       return sendHelper(tx)
     },
-    async releaseDeed(_, { label }) {
-      const tx = await releaseDeed(label)
+    async releaseDeed(_, { label, tld }) {
+      //console.log("yolo releasedeed", label, tld)
+      const tx = await releaseDeed(label, tld)
       return sendHelper(tx)
     },
     async submitProof(_, { name, parentOwner }) {

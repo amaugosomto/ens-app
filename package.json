@@ -36,6 +36,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "notification-polyfill": "^1.0.0",
+    "patch-package": "^6.2.1",
     "react": "^16.12.0",
     "react-add-to-calendar": "^0.1.5",
     "react-apollo": "^3.0.0",
@@ -79,7 +80,8 @@
     "cypress:ci": "/bin/sh -c 'if [ \"$TRAVIS_PULL_REQUEST\" = \"true\" ]; then yarn cypress:run; else yarn cypress:run; fi'",
     "cypress:ci:ipfs": "/bin/sh -c 'if [ \"$TRAVIS_PULL_REQUEST\" = \"true\" ]; then yarn cypress:run:ipfs; else yarn cypress:run:ipfs; fi'",
     "deploy:dev": "npm run build && npm run postbuild && surge build ensappdev.surge.sh",
-    "deploy": "npm run build && npm run postbuild && surge build app.ens.domains"
+    "deploy": "npm run build && npm run postbuild && surge build app.ens.domains",
+    "postinstall": "patch-package"
   },
   "prettier": {
     "semi": false,

@@ -34,6 +34,7 @@ const OrangeExclamation = styled(DefaultOrangeExclamation)`
 
 function getCTA({
   step,
+  parent,
   incrementStep,
   duration,
   label,
@@ -50,7 +51,7 @@ function getCTA({
     PRICE_DECISION: (
       <Mutation
         mutation={COMMIT}
-        variables={{ label }}
+        variables={{ label, tld: parent }}
         onCompleted={data => {
           setTxHash(Object.values(data)[0])
           incrementStep()
@@ -111,7 +112,7 @@ function getCTA({
     AWAITING_REGISTER: (
       <Mutation
         mutation={REGISTER}
-        variables={{ label, duration }}
+        variables={{ label, duration, tld: parent }}
         onCompleted={data => {
           setTxHash(Object.values(data)[0])
           incrementStep()
@@ -143,7 +144,7 @@ function getCTA({
         data-testid="manage-name-button"
         onClick={async () => {
           await Promise.all([refetch(), refetchIsMigrated()])
-          history.push(`/name/${label}.eth`)
+          history.push(`/name/${label}.${parent}`)
         }}
       >
         <Pencil />
@@ -151,11 +152,13 @@ function getCTA({
       </Button>
     )
   }
+  //console.log("yolo4", step, parent)
   return CTAs[step]
 }
 
 const CTA = ({
   step,
+  parent,
   incrementStep,
   duration,
   label,
@@ -165,12 +168,30 @@ const CTA = ({
   refetchIsMigrated,
   readOnly
 }) => {
+  /*
+  console.log(
+    "yolo3",
+    {
+      step,
+      parent,
+      incrementStep,
+      duration,
+      label,
+      setTimerRunning,
+      isAboveMinDuration,
+      refetch,
+      refetchIsMigrated,
+      readOnly
+    }
+  )
+  */
   const history = useHistory()
   const [txHash, setTxHash] = useState(undefined)
   return (
     <CTAContainer>
       {getCTA({
         step,
+        parent,
         incrementStep,
         duration,
         label,
