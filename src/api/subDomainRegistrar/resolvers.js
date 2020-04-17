@@ -1,6 +1,6 @@
 import { queryAll } from '../subDomainRegistrar'
 import { fromWei } from 'ethjs-unit'
-import { getOwner } from '@ensdomains/ui'
+import getENS from 'api/ens'
 
 const defaults = {
   subDomainState: []
@@ -25,7 +25,8 @@ const resolvers = {
             //console.log("yolo node", node)
             if (!node.available) {
               //owner = await getOwner(`${node.label}.${node.domain}.eth`)
-              owner = await getOwner(`${node.label}.${node.domain}.ewc`)
+              const ens = getENS()
+              owner = await ens.getOwner(`${node.label}.${node.domain}.ewc`)
             }
             const newNode = {
               ...node,

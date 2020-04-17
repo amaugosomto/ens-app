@@ -1,0 +1,155 @@
+diff --git a/node_modules/@ensdomains/ui/src/constants/tlds.js b/node_modules/@ensdomains/ui/src/constants/tlds.js
+index 79cf55e..306aabf 100644
+--- a/node_modules/@ensdomains/ui/src/constants/tlds.js
++++ b/node_modules/@ensdomains/ui/src/constants/tlds.js
+@@ -2,6 +2,12 @@ export const tlds = {
+   eth: {
+     supported: true
+   },
++  ewc: {
++    supported: true
++  },
++  ewf: {
++    supported: true
++  },
+   xyz: {
+     supported: true
+   },
+diff --git a/node_modules/@ensdomains/ui/src/ens.js b/node_modules/@ensdomains/ui/src/ens.js
+index 8df8f45..b602d9e 100644
+--- a/node_modules/@ensdomains/ui/src/ens.js
++++ b/node_modules/@ensdomains/ui/src/ens.js
+@@ -66,7 +66,13 @@ const contracts = {
+   },
+   5: {
+     registry: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e'
+-  }
++  },
++  73799: {
++    registry: '0xd7CeF70Ba7efc2035256d828d5287e2D285CD1ac'
++  },
++  246: {
++    registry: '0x0A6d64413c07E10E890220BBE1c49170080C6Ca0'
++   }
+ }
+ 
+ export class ENS {
+diff --git a/node_modules/@ensdomains/ui/src/registrar.js b/node_modules/@ensdomains/ui/src/registrar.js
+index 14ab088..6e1c7e2 100644
+--- a/node_modules/@ensdomains/ui/src/registrar.js
++++ b/node_modules/@ensdomains/ui/src/registrar.js
+@@ -287,7 +287,7 @@ export default class Registrar {
+     return permanentRegistrarController.minCommitmentAge()
+   }
+ 
+-  async makeCommitment(name, owner, secret = '') {
++  async makeCommitment(name, owner, secret = '', tld='eth') {
+     const permanentRegistrarControllerWithoutSigner = this
+       .permanentRegistrarController
+     const signer = await getSigner()
+@@ -295,7 +295,7 @@ export default class Registrar {
+       signer
+     )
+     const account = await getAccount()
+-    const resolverAddr = await this.getAddress('resolver.eth')
++    const resolverAddr = await this.getAddress('resolver.' + tld)
+     if (parseInt(resolverAddr, 16) === 0) {
+       return permanentRegistrarController.makeCommitment(name, owner, secret)
+     } else {
+@@ -322,7 +322,7 @@ export default class Registrar {
+     return permanentRegistrarController.commit(commitment)
+   }
+ 
+-  async register(label, duration, secret) {
++  async register(label, duration, secret, tld='eth') {
+     const permanentRegistrarControllerWithoutSigner = this
+       .permanentRegistrarController
+     const signer = await getSigner()
+@@ -331,7 +331,7 @@ export default class Registrar {
+     )
+     const account = await getAccount()
+     const price = await this.getRentPrice(label, duration)
+-    const resolverAddr = await this.getAddress('resolver.eth')
++    const resolverAddr = await this.getAddress('resolver.' + tld)
+     if (parseInt(resolverAddr, 16) === 0) {
+       return permanentRegistrarController.register(
+         label,
+@@ -471,25 +471,25 @@ export default class Registrar {
+   }
+ }
+ 
+-async function getEthResolver(ENS) {
+-  const resolverAddr = await ENS.resolver(namehash('eth'))
++async function getEthResolver(ENS, tld='eth') {
++  const resolverAddr = await ENS.resolver(namehash(tld))
+   const provider = await getProvider()
+   return getResolverContract({ address: resolverAddr, provider })
+ }
+ 
+-export async function setupRegistrar(registryAddress) {
++export async function setupRegistrar(registryAddress, tld='eth') {
+   const provider = await getProvider()
+   const ENS = getENSContract({ address: registryAddress, provider })
+   const Resolver = await getEthResolver(ENS)
+ 
+-  let ethAddress = await ENS.owner(namehash('eth'))
++  let ethAddress = await ENS.owner(namehash(tld))
+ 
+   let controllerAddress = await Resolver.interfaceImplementer(
+-    namehash('eth'),
++    namehash(tld),
+     permanentRegistrarInterfaceId
+   )
+   let legacyAuctionRegistrarAddress = await Resolver.interfaceImplementer(
+-    namehash('eth'),
++    namehash(tld),
+     legacyRegistrarInterfaceId
+   )
+ 
+diff --git a/node_modules/@ensdomains/ui/src/testing-utils/web3Util.js b/node_modules/@ensdomains/ui/src/testing-utils/web3Util.js
+index 36f579c..c7bbb7e 100644
+--- a/node_modules/@ensdomains/ui/src/testing-utils/web3Util.js
++++ b/node_modules/@ensdomains/ui/src/testing-utils/web3Util.js
+@@ -96,6 +96,10 @@ function getNetworkProviderUrl(id) {
+       return `https://rinkeby.infura.io/v3/90f210707d3c450f847659dc9a3436ea`
+     case '5':
+       return `https://goerli.infura.io/v3/90f210707d3c450f847659dc9a3436ea`
++    case '246':
++      return `https://rpc.energyweb.org`
++    case '73799':
++      return `https://volta-rpc.energyweb.org`
+     default:
+       return 'private'
+   }
+diff --git a/node_modules/@ensdomains/ui/src/utils/index.js b/node_modules/@ensdomains/ui/src/utils/index.js
+index 4c38aec..4ccfedc 100644
+--- a/node_modules/@ensdomains/ui/src/utils/index.js
++++ b/node_modules/@ensdomains/ui/src/utils/index.js
+@@ -38,6 +38,12 @@ async function getEtherScanAddr() {
+     case 4:
+     case '4':
+       return 'https://rinkeby.etherscan.io/'
++    case 246:
++    case '246':
++      return 'https://explorer.energyweb.org'
++    case 73799:
++    case '73799':
++      return 'https://volta-explorer.energyweb.org'
+     default:
+       return 'https://etherscan.io/'
+   }
+diff --git a/node_modules/@ensdomains/ui/src/web3.js b/node_modules/@ensdomains/ui/src/web3.js
+index e645d17..f145412 100644
+--- a/node_modules/@ensdomains/ui/src/web3.js
++++ b/node_modules/@ensdomains/ui/src/web3.js
+@@ -121,6 +121,10 @@ function getNetworkProviderUrl(id) {
+       return `https://rinkeby.infura.io/v3/90f210707d3c450f847659dc9a3436ea`
+     case '5':
+       return `https://goerli.infura.io/v3/90f210707d3c450f847659dc9a3436ea`
++    case '246':
++      return `https://rpc.energyweb.org`
++    case '73799':
++      return `https://volta-rpc.energyweb.org`
+     default:
+       return 'private'
+   }
