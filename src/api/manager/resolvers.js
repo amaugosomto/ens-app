@@ -77,7 +77,10 @@ async function getParent(name) {
 
 async function getRegistrarEntry(name) {
   const nameArray = name.split('.')
-  if (nameArray.length > 3 || nameArray[1] !== 'eth') {
+  if (
+    nameArray.length > 3 ||
+    (nameArray[1] !== 'eth' && nameArray[1] !== 'ewc')
+  ) {
     return {}
   }
 
@@ -177,7 +180,12 @@ function adjustForShortNames(node) {
   const { label, parent } = node
 
   // return original node if is subdomain or not eth
-  if (nameArray.length > 2 || parent !== 'eth' || label.length > 6) return node
+  if (
+    nameArray.length > 2 ||
+    (parent !== 'eth' && parent !== 'ewc') ||
+    label.length > 6
+  )
+    return node
 
   //if the auctions are over
   if (new Date() > new Date(1570924800000)) {
@@ -306,7 +314,7 @@ const resolvers = {
     },
     getResolverMigrationInfo: async (_, { name, resolver }, { cache }) => {
       /* TODO add hardcoded resolver addresses */
-
+      let nametld = name.split('.').slice(-1)[0] || 'eth'
       const networkId = await getNetworkId()
 
       const RESOLVERS = {
@@ -372,14 +380,14 @@ const resolvers = {
         )
       }
 
-      async function calculateIsPublicResolverReady() {
-        const publicResolver = await getAddress('resolver.eth')
+      async function calculateIsPublicResolverReady(_tld = 'eth') {
+        const publicResolver = await getAddress('resolver' + _tld)
         return !OLD_RESOLVERS.map(a => a.toLowerCase()).includes(publicResolver)
       }
 
       let isDeprecatedResolver = calculateIsDeprecatedResolver(resolver)
       let isOldPublicResolver = calculateIsOldPublicResolver(resolver)
-      let isPublicResolverReady = await calculateIsPublicResolverReady()
+      let isPublicResolverReady = await calculateIsPublicResolverReady(nametld)
       const resolverMigrationInfo = {
         name,
         isDeprecatedResolver,
@@ -697,7 +705,9 @@ const resolvers = {
 
       // get public resolver
       try {
-        const publicResolver = await getAddress('resolver.eth')
+        const publicResolver = await getAddress(
+          'resolver.' + (name.split('.').slice(-1)[0] || 'eth')
+        )
         const resolver = await getResolver(name)
         const isOldContentResolver = calculateIsOldContentResolver(resolver)
 

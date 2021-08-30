@@ -26,7 +26,7 @@ window.addEventListener('load', async () => {
       })
     } else {
       await setupENS({
-        reloadOnAccountsChange: false
+        reloadOnAccountsChange: true
       })
     }
     const networkId = await getNetworkId()

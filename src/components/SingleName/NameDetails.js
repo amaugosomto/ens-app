@@ -218,7 +218,8 @@ function DetailsContainer({
         </DetailsItem>
       )}
       <OwnerFields outOfSync={outOfSync}>
-        {domain.parent === 'eth' && domain.isNewRegistrar ? (
+        {(domain.parent === 'eth' || domain.parent === 'ewc') &&
+        domain.isNewRegistrar ? (
           <>
             <DetailsItemEditable
               domain={domain}
@@ -247,7 +248,8 @@ function DetailsContainer({
               confirm={true}
             />
           </>
-        ) : domain.parent === 'eth' && !domain.isNewRegistrar ? (
+        ) : (domain.parent === 'eth' || domain.parent === 'ewc') &&
+          !domain.isNewRegistrar ? (
           <>
             <DetailsItem uneditable>
               <DetailsKey>Registrant</DetailsKey>
@@ -556,7 +558,11 @@ function NameDetails({
   const releaseDeed = domain.deedOwner && parseInt(domain.deedOwner, 16) !== 0
   const isAnAbsolutePath = pathname.split('/').length > 3
 
-  if (domain.parent === 'eth' && tab === 'register' && !isAnAbsolutePath) {
+  if (
+    (domain.parent === 'eth' || domain.parent === 'ewc') &&
+    tab === 'register' &&
+    !isAnAbsolutePath
+  ) {
     return (
       <NameRegister
         registrationOpen={registrationOpen}
@@ -568,7 +574,7 @@ function NameDetails({
       />
     )
   } else if (
-    domain.parent === 'eth' &&
+    (domain.parent === 'eth' || domain.parent === 'ewc') &&
     tab === 'details' &&
     !isAnAbsolutePath
   ) {
@@ -596,7 +602,10 @@ function NameDetails({
         duringMigration={duringMigration}
       />
     )
-  } else if (domain.parent !== 'eth' && !isAnAbsolutePath) {
+  } else if (
+    (domain.parent === 'eth' || domain.parent === 'ewc') &&
+    !isAnAbsolutePath
+  ) {
     //subdomain or dns
     return (
       <DetailsContainer

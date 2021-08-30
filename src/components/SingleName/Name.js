@@ -27,7 +27,7 @@ const RightBar = styled('div')`
 const Favourite = styled(DefaultFavourite)``
 
 function isRegistrationOpen(available, parent, isDeedOwner) {
-  return parent === 'eth' && !isDeedOwner && available
+  return (parent === 'eth' || parent === 'ewc') && !isDeedOwner && !available
 }
 
 function isDNSRegistrationOpen(domain) {
@@ -77,6 +77,7 @@ function Name({ details: domain, name, pathname, type, refetch }) {
   } else {
     containerState = isOwner ? 'Yours' : domain.state
   }
+  containerState = 'Open'
   return (
     <NameContainer state={containerState}>
       <TopBar percentDone={percentDone}>

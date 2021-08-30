@@ -27,12 +27,12 @@ function randomSecret() {
 
 const resolvers = {
   Query: {
-    async getRentPrice(_, { name, duration }, { cache }) {
-      return await getRentPrice(name, duration)
+    async getRentPrice(_, { name, duration, tld }, { cache }) {
+      return await getRentPrice(name, duration, tld)
     },
-    async getMinimumCommitmentAge() {
+    async getMinimumCommitmentAge(_, { tld }) {
       try {
-        const minCommitmentAge = await getMinimumCommitmentAge()
+        const minCommitmentAge = await getMinimumCommitmentAge(tld)
         return parseInt(minCommitmentAge)
       } catch (e) {
         console.log(e)
