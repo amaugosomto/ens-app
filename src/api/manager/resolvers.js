@@ -84,7 +84,7 @@ async function getRegistrarEntry(name) {
     return {}
   }
 
-  const entry = await getEntry(nameArray[0])
+  const entry = await getEntry(nameArray[0], nameArray[1])
   const {
     registrant,
     deedOwner,
@@ -315,6 +315,7 @@ const resolvers = {
     getResolverMigrationInfo: async (_, { name, resolver }, { cache }) => {
       /* TODO add hardcoded resolver addresses */
       let nametld = name.split('.').slice(-1)[0] || 'eth'
+
       const networkId = await getNetworkId()
 
       const RESOLVERS = {

@@ -104,6 +104,7 @@ const NameRegisterDataWrapper = props => {
   return (
     <Query query={GET_MINIMUM_COMMITMENT_AGE}>
       {({ data, loading, error }) => {
+        debugger
         if (loading) return <Loader withWrap={true} large />
         if (error) {
           console.log(error)

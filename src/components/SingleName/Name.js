@@ -77,7 +77,6 @@ function Name({ details: domain, name, pathname, type, refetch }) {
   } else {
     containerState = isOwner ? 'Yours' : domain.state
   }
-  containerState = 'Open'
   return (
     <NameContainer state={containerState}>
       <TopBar percentDone={percentDone}>
