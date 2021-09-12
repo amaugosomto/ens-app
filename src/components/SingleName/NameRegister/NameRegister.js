@@ -70,6 +70,7 @@ const NameRegister = ({
           name={domain.label}
           duration={duration}
           years={years}
+          tld={domain.parent.split('.').slice(-1)[0]}
           setYears={setYears}
           ethUsdPriceLoading={ethUsdPriceLoading}
           ethUsdPrice={ethUsdPrice}
@@ -102,9 +103,14 @@ const NameRegister = ({
 
 const NameRegisterDataWrapper = props => {
   return (
-    <Query query={GET_MINIMUM_COMMITMENT_AGE}>
+    <Query
+      query={GET_MINIMUM_COMMITMENT_AGE}
+      variables={{
+        tld:
+          props.domain.parent.split('.').slice(-1)[0] === 'ewc' ? 'ewc' : 'eth'
+      }}
+    >
       {({ data, loading, error }) => {
-        debugger
         if (loading) return <Loader withWrap={true} large />
         if (error) {
           console.log(error)
