@@ -1,6 +1,6 @@
 import { queryAll } from '../subDomainRegistrar'
 import { fromWei } from 'ethjs-unit'
-import { getOwner } from '@ensdomains/ui'
+import { getOwner } from '@energywebfoundation/ui'
 
 const defaults = {
   subDomainState: []

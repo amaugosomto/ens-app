@@ -1,5 +1,10 @@
-import { getWeb3, getAccounts, getNetworkId, isReadOnly } from '@ensdomains/ui'
-import { getAddress } from '@ensdomains/ui'
+import {
+  getWeb3,
+  getAccounts,
+  getNetworkId,
+  isReadOnly
+} from '@energywebfoundation/ui'
+import { getAddress } from '@energywebfoundation/ui'
 import merge from 'lodash/merge'
 import fifsResolvers, {
   defaults as fifsDefaults

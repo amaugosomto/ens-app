@@ -1135,6 +1135,30 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.3.tgz#dfa0c92efe44a1d1a7974fb49ffeb40ef2da5a27"
   integrity sha512-zVgvPwGK7c1aVdUVc9Qv7SqepOGRDrqCw7KZPSZziWGxSlbII3gmvGLPzLX4d0n0BMbamBacUrN22zOMyFFEkQ==
 
+"@energywebfoundation/ui@git+https://github.com/energywebfoundation/ui.git":
+  version "2.0.12"
+  resolved "git+https://github.com/energywebfoundation/ui.git#b134f0048fa3fa5c41259304b1ffd8ac83392fd7"
+  dependencies:
+    "@0xproject/utils" "^2.0.2"
+    "@babel/runtime" "^7.4.4"
+    "@ensdomains/address-encoder" "^0.1.2"
+    "@ensdomains/dnsregistrar" "^0.3.9"
+    "@ensdomains/ens" "^0.4.3"
+    "@ensdomains/ens-022" "npm:@ensdomains/ens@0.2.2"
+    "@ensdomains/ethregistrar" "^2.0.0"
+    "@ensdomains/resolver" "0.2.4"
+    "@ensdomains/subdomain-registrar" "^0.2.1"
+    "@ethvault/iframe-provider" "0.1.9"
+    base58check "^2.0.0"
+    bech32 "^1.1.3"
+    bs58 "^4.0.1"
+    content-hash "^2.4.1"
+    cross-fetch "^3.0.2"
+    eth-ens-namehash "^2.0.8"
+    ethers "4.0.44"
+    js-sha3 "^0.8.0"
+    lodash "^4.17.11"
+
 "@ensdomains/address-encoder@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@ensdomains/address-encoder/-/address-encoder-0.1.1.tgz#4f03462c7f7a623bcd8d098cbd577e378f869642"
