@@ -188,6 +188,30 @@ function DetailsContainer({
   loadingIsParentMigrated,
   duringMigration
 }) {
+  console.log('yolo:', domain)
+  console.log('yolo2:', {
+    isMigratedToNewRegistry,
+    isDeedOwner,
+    isRegistrant,
+    showExplainer,
+    canSubmit,
+    outOfSync,
+    releaseDeed,
+    loading,
+    setLoading,
+    isOwnerOfParent,
+    isOwner,
+    refetch,
+    domain,
+    dnssecmode,
+    account,
+    loadingIsMigrated,
+    refetchIsMigrated,
+    isParentMigratedToNewRegistry,
+    loadingIsParentMigrated,
+    duringMigration
+  })
+
   return (
     <Details data-testid="name-details">
       {isOwner && !duringMigration && (

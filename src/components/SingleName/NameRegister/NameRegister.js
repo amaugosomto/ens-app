@@ -90,6 +90,7 @@ const NameRegister = ({
         step={step}
         label={domain.label}
         duration={duration}
+        parent={domain.parent}
         secondsPassed={secondsPassed}
         setTimerRunning={setTimerRunning}
         refetch={refetch}

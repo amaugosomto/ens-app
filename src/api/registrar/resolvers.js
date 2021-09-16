@@ -31,7 +31,6 @@ const resolvers = {
       return await getRentPrice(name, duration, tld)
     },
     async getMinimumCommitmentAge(_, { tld }) {
-      debugger
       try {
         const minCommitmentAge = await getMinimumCommitmentAge(tld)
         return parseInt(minCommitmentAge)
@@ -43,14 +42,12 @@ const resolvers = {
   Mutation: {
     async commit(_, { label, tld }, { cache }) {
       //Generate secret
-      console.log('yolo commit', label, tld)
       const secret = randomSecret()
       secrets[label] = secret
       const tx = await commit(label, secret, tld)
       return sendHelper(tx)
     },
     async register(_, { label, duration, tld }) {
-      console.log('yolo register', label, tld)
       const secret = secrets[label]
       const tx = await register(label, duration, secret, tld)
 
@@ -62,7 +59,6 @@ const resolvers = {
       return sendHelper(tx)
     },
     async renew(_, { label, duration, tld }) {
-      console.log('yolo renew', label, tld)
       const tx = await renew(label, duration, tld)
       return sendHelper(tx)
     },

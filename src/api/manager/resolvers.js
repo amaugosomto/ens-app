@@ -79,7 +79,7 @@ async function getRegistrarEntry(name) {
   const nameArray = name.split('.')
   if (
     nameArray.length > 3 ||
-    (nameArray[1] !== 'eth' || nameArray[1] !== 'ewc')
+    (nameArray[1] !== 'eth' && nameArray[1] !== 'ewc')
   ) {
     return {}
   }
